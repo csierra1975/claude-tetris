@@ -1,0 +1,47 @@
+name: Claude Issue Triage
+
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  triage:
+    # Evita re-ejecutar en issues creados por bots y limita a acciones relevantes
+    if: github.event.issue.pull_request == null
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write          # necesario para añadir labels y comentar
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Run Claude Issue Triage
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          claude_args: '--allowed-tools "Bash(gh label list:*),Bash(gh issue view:*),Bash(gh issue edit:*),Bash(gh issue comment:*)"'
+          prompt: |
+            Analiza el issue #${{ github.event.issue.number }} del repo ${{ github.repository }}.
+
+            Pasos:
+            1. Lee el título y el cuerpo del issue (usa `gh issue view ${{ github.event.issue.number }}`).
+            2. Obtén los labels EXISTENTES del repo con `gh label list`. SOLO puedes usar
+               esos labels; NO crees labels nuevos.
+            3. Asigna los labels que apliquen con
+               `gh issue edit ${{ github.event.issue.number }} --add-label "..."`.
+               Si ninguno aplica claramente, no asignes ninguno.
+            4. Publica UN comentario en español con `gh issue comment` con este formato:
+
+               ## 🔍 Diagnóstico automático (Claude)
+               **Resumen:** <qué pide/reporta el issue en 1-2 frases>
+               **Tipo:** <bug / mejora / duda / documentación...>
+               **Causa o área probable:** <hipótesis técnica>
+               **Archivos probablemente afectados:** <lista, p.ej. game.js, index.html, style.css>
+               **Enfoque de solución sugerido:** <pasos de alto nivel para implementar>
+               **Labels asignados:** <los que pusiste, o "ninguno">
+
+            Sé conciso. No modifiques código. Publica un único comentario de diagnóstico.
