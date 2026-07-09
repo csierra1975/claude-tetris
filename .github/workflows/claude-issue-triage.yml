@@ -45,3 +45,5 @@ jobs:
                **Labels asignados:** <los que pusiste, o "ninguno">
 
             Sé conciso. No modifiques código. Publica un único comentario de diagnóstico.
+            El comentario debe estar escrito en formato Markdown válido y correctamente
+            interpretable por GitHub (encabezados, negritas, listas, etc.).
