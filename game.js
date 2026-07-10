@@ -41,8 +41,16 @@ const overlay = document.getElementById('overlay');
 const overlayTitle = document.getElementById('overlay-title');
 const overlayScore = document.getElementById('overlay-score');
 const restartBtn = document.getElementById('restart-btn');
+const highscoresBody = document.getElementById('highscores-body');
+const bestComboEl = document.getElementById('best-combo');
+const bestLinesEl = document.getElementById('best-lines');
+const resetHighscoresBtn = document.getElementById('reset-highscores-btn');
+const newRecordForm = document.getElementById('new-record-form');
+const playerNameInput = document.getElementById('player-name-input');
+const saveRecordBtn = document.getElementById('save-record-btn');
+const overlayHighscoresBody = document.getElementById('overlay-highscores-body');
 
-let board, current, next, score, lines, level, paused, gameOver, lastTime, dropAccum, dropInterval, animId;
+let board, current, next, score, lines, level, paused, gameOver, lastTime, dropAccum, dropInterval, animId, combo, maxCombo;
 
 function createBoard() {
   return Array.from({ length: ROWS }, () => new Array(COLS).fill(0));
@@ -106,12 +114,15 @@ function clearLines() {
     }
   }
   if (cleared) {
+    combo++;
+    maxCombo = Math.max(maxCombo, combo);
     lines += cleared;
     score += (LINE_SCORES[cleared] || 0) * level;
     level = Math.floor(lines / 10) + 1;
     dropInterval = Math.max(100, 1000 - (level - 1) * 90);
     updateHUD();
   }
+  return cleared;
 }
 
 function ghostY() {
@@ -139,7 +150,8 @@ function softDrop() {
 
 function lockPiece() {
   merge();
-  clearLines();
+  const cleared = clearLines();
+  if (cleared === 0) combo = 0;
   spawn();
 }
 
@@ -226,6 +238,24 @@ function endGame() {
   overlayTitle.textContent = 'GAME OVER';
   overlayScore.textContent = `Puntuación: ${score.toLocaleString()}`;
   overlay.classList.remove('hidden');
+
+  // El máximo histórico de combo/líneas se actualiza siempre al terminar la
+  // partida, sin importar si la puntuación entra en el top 5 de records.
+  const data = loadHighscoreData();
+  data.maxCombo = Math.max(data.maxCombo, maxCombo);
+  data.maxLines = Math.max(data.maxLines, lines);
+  saveHighscoreData(data);
+  updateGlobalStats(data);
+
+  const qualifies = data.records.length < 5 || score > data.records[data.records.length - 1].score;
+  if (qualifies) {
+    newRecordForm.classList.remove('hidden');
+    playerNameInput.value = '';
+    setTimeout(() => playerNameInput.focus(), 0);
+  } else {
+    newRecordForm.classList.add('hidden');
+  }
+  renderHighscoresTable(overlayHighscoresBody, data, null);
 }
 
 function togglePause() {
@@ -264,6 +294,8 @@ function init() {
   score = 0;
   lines = 0;
   level = 1;
+  combo = 0;
+  maxCombo = 0;
   paused = false;
   gameOver = false;
   dropInterval = 1000;
@@ -273,6 +305,7 @@ function init() {
   spawn();
   updateHUD();
   overlay.classList.add('hidden');
+  newRecordForm.classList.add('hidden');
   cancelAnimationFrame(animId);
   animId = requestAnimationFrame(loop);
 }
@@ -319,5 +352,99 @@ themeSwitch.addEventListener('change', () => {
   applyTheme(theme);
   localStorage.setItem(THEME_KEY, theme);
 });
+
+// ---- Tabla de records (localStorage) ----
+// Criterio elegido para "líneas máximas": líneas totales acumuladas en UNA
+// partida (variable `lines` al terminar el juego), no el mayor clear de una
+// sola pieza. `maxCombo` es el mayor combo (clears consecutivos sin fallar)
+// alcanzado dentro de una partida.
+const HS_KEY = 'tetris-highscores';
+
+function loadHighscoreData() {
+  try {
+    const raw = localStorage.getItem(HS_KEY);
+    if (!raw) return { records: [], maxCombo: 0, maxLines: 0 };
+    const parsed = JSON.parse(raw);
+    return {
+      records: Array.isArray(parsed.records) ? parsed.records : [],
+      maxCombo: Number(parsed.maxCombo) || 0,
+      maxLines: Number(parsed.maxLines) || 0,
+    };
+  } catch {
+    return { records: [], maxCombo: 0, maxLines: 0 };
+  }
+}
+
+function saveHighscoreData(data) {
+  localStorage.setItem(HS_KEY, JSON.stringify(data));
+}
+
+function addHighscoreRecord(name, scoreVal, comboVal, linesVal) {
+  const data = loadHighscoreData();
+  const entry = { name: name || 'Jugador', score: scoreVal, combo: comboVal, lines: linesVal };
+  data.records.push(entry);
+  data.records.sort((a, b) => b.score - a.score);
+  data.records = data.records.slice(0, 5);
+  data.maxCombo = Math.max(data.maxCombo, comboVal);
+  data.maxLines = Math.max(data.maxLines, linesVal);
+  saveHighscoreData(data);
+  return { data, entry };
+}
+
+function renderHighscoresTable(tbodyEl, data, highlightEntry) {
+  tbodyEl.innerHTML = '';
+  if (!data.records.length) {
+    const tr = document.createElement('tr');
+    const td = document.createElement('td');
+    td.colSpan = 5;
+    td.textContent = 'Sin récords aún';
+    tr.appendChild(td);
+    tbodyEl.appendChild(tr);
+    return;
+  }
+  data.records.forEach((rec, i) => {
+    const tr = document.createElement('tr');
+    if (rec === highlightEntry) tr.classList.add('highlight');
+    [i + 1, rec.name, rec.score.toLocaleString(), rec.combo, rec.lines].forEach(val => {
+      const td = document.createElement('td');
+      td.textContent = val;
+      tr.appendChild(td);
+    });
+    tbodyEl.appendChild(tr);
+  });
+}
+
+function updateGlobalStats(data) {
+  bestComboEl.textContent = data.maxCombo;
+  bestLinesEl.textContent = data.maxLines;
+}
+
+function refreshHighscoresUI(highlightEntry) {
+  const data = loadHighscoreData();
+  renderHighscoresTable(highscoresBody, data, highlightEntry);
+  updateGlobalStats(data);
+  return data;
+}
+
+saveRecordBtn.addEventListener('click', () => {
+  const name = playerNameInput.value.trim().slice(0, 12) || 'Jugador';
+  const { data, entry } = addHighscoreRecord(name, score, maxCombo, lines);
+  renderHighscoresTable(overlayHighscoresBody, data, entry);
+  renderHighscoresTable(highscoresBody, data, entry);
+  updateGlobalStats(data);
+  newRecordForm.classList.add('hidden');
+});
+
+playerNameInput.addEventListener('keydown', e => {
+  if (e.code === 'Enter') saveRecordBtn.click();
+});
+
+resetHighscoresBtn.addEventListener('click', () => {
+  localStorage.removeItem(HS_KEY);
+  const data = refreshHighscoresUI(null);
+  renderHighscoresTable(overlayHighscoresBody, data, null);
+});
+
+refreshHighscoresUI();
 
 init();
