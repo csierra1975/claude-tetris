@@ -386,3 +386,134 @@ kbd {
   align-items: center;
   gap: 4px;
 }
+
+#start-title {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: 4px;
+  color: var(--title-color);
+}
+
+.btn-secondary {
+  margin-top: 4px;
+  background: transparent;
+  color: var(--label-color);
+  border: 1px solid var(--kbd-border);
+  border-radius: 6px;
+  padding: 8px 20px;
+  font-size: 12px;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.btn-secondary:hover {
+  color: var(--overlay-title);
+  border-color: var(--overlay-title);
+}
+
+/* ---- Name entry ---- */
+.name-entry {
+  display: flex;
+  gap: 8px;
+}
+
+.name-entry.hidden {
+  display: none;
+}
+
+#name-input {
+  width: 120px;
+  background: var(--kbd-bg);
+  border: 1px solid var(--kbd-border);
+  border-radius: 4px;
+  padding: 6px 8px;
+  color: var(--text);
+  font-size: 13px;
+  font-family: inherit;
+}
+
+#name-input:focus {
+  outline: none;
+  border-color: var(--btn-bg);
+}
+
+#save-btn {
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  border: none;
+  border-radius: 4px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+#save-btn:hover {
+  background: var(--btn-hover);
+}
+
+/* ---- Records table ---- */
+.records {
+  width: 220px;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.records-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+
+.records-empty {
+  font-size: 12px;
+  color: var(--label-color);
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.record-row {
+  display: grid;
+  grid-template-columns: 20px 1fr auto;
+  gap: 8px;
+  font-size: 13px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  color: var(--text);
+}
+
+.record-row.highlight {
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  font-weight: 700;
+}
+
+.record-rank {
+  color: var(--label-color);
+  text-align: right;
+}
+
+.record-row.highlight .record-rank {
+  color: var(--btn-text);
+}
+
+.record-name {
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.record-score {
+  text-align: right;
+}
+
+.records-stats {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--label-color);
+  border-top: 1px solid var(--kbd-border);
+  padding-top: 8px;
+}
