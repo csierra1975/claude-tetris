@@ -241,6 +241,12 @@ kbd {
   color: var(--overlay-title);
 }
 
+.overlay-heading.small {
+  font-size: 16px;
+  letter-spacing: 2px;
+  margin-top: 4px;
+}
+
 #overlay-score {
   font-family: 'Courier New', Courier, monospace;
   font-size: 14px;
@@ -264,6 +270,19 @@ kbd {
 
 .menu-btn:hover {
   background: var(--btn-hover);
+}
+
+.menu-btn.secondary {
+  background: transparent;
+  color: var(--controls-text);
+  border: 1px solid var(--kbd-border);
+  font-size: 11px;
+  padding: 6px 16px;
+}
+
+.menu-btn.secondary:hover {
+  background: var(--kbd-bg);
+  color: var(--text);
 }
 
 /* ---- Menú de pausa ---- */
@@ -314,4 +333,88 @@ kbd {
   display: flex;
   align-items: center;
   gap: 4px;
+}
+
+/* ---- Records ---- */
+.overlay-box.records-box,
+#overlay .overlay-box {
+  width: 220px;
+}
+
+.records-list {
+  list-style: none;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.record-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  padding: 3px 6px;
+  border-radius: 4px;
+}
+
+.record-row .rank {
+  color: var(--label-color);
+  width: 18px;
+}
+
+.record-row .rname {
+  flex: 1;
+  text-align: left;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.record-row .rscore {
+  font-family: 'Courier New', Courier, monospace;
+  color: var(--value-color);
+}
+
+.record-row.highlight {
+  background: var(--kbd-bg);
+  box-shadow: 0 0 0 1px var(--btn-bg) inset;
+}
+
+.record-empty {
+  font-size: 12px;
+  color: var(--controls-text);
+}
+
+.stats-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 11px;
+  color: var(--controls-text);
+}
+
+#record-entry {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+#qualify-msg {
+  font-size: 13px;
+  color: var(--overlay-score);
+}
+
+#player-name {
+  width: 100%;
+  background: var(--kbd-bg);
+  border: 1px solid var(--kbd-border);
+  color: var(--text);
+  border-radius: 6px;
+  padding: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  text-align: center;
 }
