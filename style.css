@@ -183,6 +183,23 @@ body {
   transition: background 0.2s, border-color 0.2s;
 }
 
+/* ---- Skin selector ---- */
+.skin-select {
+  background: var(--kbd-bg);
+  border: 1px solid var(--kbd-border);
+  color: var(--value-color);
+  border-radius: 4px;
+  padding: 6px 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+body[data-skin="neon"] #board,
+body[data-skin="neon"] #next-canvas {
+  background: #05050a;
+}
+
 /* ---- Controles ---- */
 .controls ul {
   list-style: none;
