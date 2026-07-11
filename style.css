@@ -19,6 +19,8 @@
   --btn-bg: #7aa2f7;
   --btn-text: #0f0f17;
   --btn-hover: #9bbdff;
+  --highlight-bg: rgba(122, 162, 247, 0.25);
+  --highlight-text: #ffd54f;
 }
 
 body.light-theme {
@@ -42,6 +44,8 @@ body.light-theme {
   --btn-bg: #3b5bdb;
   --btn-text: #ffffff;
   --btn-hover: #5470e0;
+  --highlight-bg: rgba(59, 91, 219, 0.18);
+  --highlight-text: #b8860b;
 }
 
 *, *::before, *::after {
@@ -192,6 +196,109 @@ body {
   background: var(--board-bg);
   border-radius: 4px;
   transition: background 0.2s, border-color 0.2s;
+}
+
+/* ---- Records ---- */
+.records-section {
+  gap: 8px;
+}
+
+.highscores-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 10px;
+  table-layout: fixed;
+}
+
+.highscores-table th,
+.highscores-table td {
+  padding: 2px 3px;
+  text-align: left;
+  color: var(--controls-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.highscores-table th {
+  color: var(--label-color);
+  font-weight: 600;
+  border-bottom: 1px solid var(--kbd-border);
+}
+
+.highscores-table tr.highlight {
+  background: var(--highlight-bg);
+  color: var(--highlight-text);
+  font-weight: 700;
+}
+
+.records-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 11px;
+  color: var(--controls-text);
+}
+
+.records-stats strong {
+  color: var(--value-color);
+}
+
+.reset-btn {
+  background: transparent;
+  color: var(--controls-text);
+  border: 1px solid var(--kbd-border);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 11px;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.reset-btn:hover {
+  background: var(--kbd-bg);
+  color: var(--text);
+}
+
+#overlay-highscores-table {
+  min-width: 260px;
+}
+
+.new-record-form {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.new-record-form.hidden {
+  display: none;
+}
+
+#player-name-input {
+  background: var(--kbd-bg);
+  border: 1px solid var(--kbd-border);
+  border-radius: 4px;
+  color: var(--text);
+  padding: 6px 8px;
+  font-size: 13px;
+  width: 130px;
+}
+
+#save-record-btn {
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+#save-record-btn:hover {
+  background: var(--btn-hover);
 }
 
 /* ---- Controles ---- */

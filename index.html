@@ -50,6 +50,21 @@
           </select>
         </div>
 
+        <div class="panel-section records-section">
+          <span class="label">RECORDS</span>
+          <table class="highscores-table" id="highscores-table">
+            <thead>
+              <tr><th>#</th><th>Nombre</th><th>Pts</th><th>Cbo</th><th>Lín</th></tr>
+            </thead>
+            <tbody id="highscores-body"></tbody>
+          </table>
+          <div class="records-stats">
+            <span>Mejor combo: <strong id="best-combo">0</strong></span>
+            <span>Máx. líneas: <strong id="best-lines">0</strong></span>
+          </div>
+          <button id="reset-highscores-btn" class="reset-btn">Resetear récords</button>
+        </div>
+
         <div class="panel-section controls">
           <span class="label">CONTROLS</span>
           <ul>
@@ -67,6 +82,16 @@
       <div class="overlay-box">
         <p id="overlay-title">GAME OVER</p>
         <p id="overlay-score"></p>
+        <div id="new-record-form" class="new-record-form hidden">
+          <input type="text" id="player-name-input" placeholder="Tu nombre" maxlength="12" autocomplete="off" />
+          <button id="save-record-btn">Guardar récord</button>
+        </div>
+        <table class="highscores-table" id="overlay-highscores-table">
+          <thead>
+            <tr><th>#</th><th>Nombre</th><th>Puntos</th><th>Combo</th><th>Líneas</th></tr>
+          </thead>
+          <tbody id="overlay-highscores-body"></tbody>
+        </table>
         <button id="restart-btn">Reiniciar</button>
       </div>
     </div>
