@@ -53,11 +53,39 @@
       </aside>
     </div>
 
+    <div id="start-screen" class="overlay">
+      <div class="overlay-box records-box">
+        <p class="overlay-heading">TOP 5</p>
+        <ol id="start-records-list" class="records-list"></ol>
+        <div class="stats-row">
+          <span id="start-best-combo">Mejor combo: 0</span>
+          <span id="start-max-lines">Líneas máx: 0</span>
+        </div>
+        <button id="play-btn" class="menu-btn">Jugar</button>
+        <button class="reset-records-btn menu-btn secondary">Resetear records</button>
+      </div>
+    </div>
+
     <div id="overlay" class="overlay hidden">
       <div class="overlay-box">
         <p id="overlay-title">GAME OVER</p>
         <p id="overlay-score"></p>
-        <button id="restart-btn">Reiniciar</button>
+
+        <div id="record-entry" class="hidden">
+          <p id="qualify-msg">¡Nuevo record! Escribe tu nombre:</p>
+          <input id="player-name" type="text" maxlength="12" placeholder="Tu nombre" autocomplete="off" />
+          <button id="save-score-btn" class="menu-btn">Guardar</button>
+        </div>
+
+        <p class="overlay-heading small">TOP 5</p>
+        <ol id="gameover-records-list" class="records-list"></ol>
+        <div class="stats-row">
+          <span id="gameover-best-combo">Mejor combo: 0</span>
+          <span id="gameover-max-lines">Líneas máx: 0</span>
+        </div>
+
+        <button id="restart-btn" class="menu-btn">Reiniciar</button>
+        <button class="reset-records-btn menu-btn secondary">Resetear records</button>
       </div>
     </div>
   </div>
